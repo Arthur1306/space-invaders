@@ -7,40 +7,44 @@ pygame.init()
 
 # Variaveis da tela
 altura, largura = 840, 480
-BG_COLOR = ("black")
 WHITE = ("white")
-
-bullet = pygame.image.load('assets/pixil-frame-0.png')
-bullet = pygame.transform.scale(bullet, (15,25))
 
 # Montando a tela
 tela = pygame.display.set_mode((altura, largura))
 pygame.display.set_caption('Space Invaders')
+
+def update():
+    pygame.display.flip()
 
 # Aqui defino o player e os inimigos
 class Player():
     player = pygame.image.load('assets/player.png')
     posx = 380
     posy = 440
+    proy = posy-25
+    prox = posx+22
 
     def atirar():
-        proy = Player.posy-25
-        prox = Player.posx+22
-        i=0
-        tela.blit(bullet, (prox,proy))
-        pygame.display.flip()
-        while i<420:
-            proy-=1
-            i+=1
+        proy = Player.proy
+        prox = Player.prox
+        tela.blit(Images.bullet, (prox,proy))
+        for i in range(420):
+            Images.bullet_center.x +=2
+        update()
 
 class Images():
     red_image = pygame.image.load('assets/red.png')
     green_image = pygame.image.load('assets/green.png')
     yellow_image = pygame.image.load('assets/yellow.png')
+    bg = pygame.image.load('assets/space.jpg')
+    
+    bullet = pygame.image.load('assets/pixil-frame-0.png')
+    bullet_center = bullet.get_rect()
+    bullet = pygame.transform.scale(bullet, (15,25))
 
 def draw(tela):
     # Desenhando na tela os elementos
-    tela.fill(BG_COLOR)
+    tela.blit(Images.bg, (0, 0))
     tela.blit(Player.player, (Player.posx, Player.posy))
 
     vezes = 0
@@ -48,6 +52,7 @@ def draw(tela):
     while vezes < 3:
         for x in range(10, 800, 60):
             tela.blit(Images.red_image, (x, y))
+            red_center = Images.red_image.get_rect(center=(x,y))
         y+=30
         vezes+=1
     
@@ -57,6 +62,7 @@ def draw(tela):
     while vezes < 3:
         for x in range(10, 800, 60):
             tela.blit(Images.green_image, (x, y))
+            green_center = Images.green_image.get_rect(center=(x,y))
         y+=30
         vezes+=1
 
@@ -64,8 +70,9 @@ def draw(tela):
 
     for x in range(10, 800, 60):
         tela.blit(Images.yellow_image, (x, y))
+        yellow_center = Images.yellow_image.get_rect(center=(x,y))
 
-    pygame.display.flip()
+    update()
 
 def main():
     # Loop principal do jogo
@@ -79,9 +86,11 @@ def main():
 
         # Controle do player
         if pygame.key.get_pressed()[K_a]:
-            Player.posx -= 2
+            if Player.posx >= 5:
+                Player.posx -= 3
         if pygame.key.get_pressed()[K_d]:
-            Player.posx += 2
+            if Player.posx <= 775:
+                Player.posx += 3
         if pygame.key.get_pressed()[K_h]:
             Player.atirar()
         
