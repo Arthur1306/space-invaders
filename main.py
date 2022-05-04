@@ -12,6 +12,10 @@ WHITE = ("white")
 # Montando a tela
 tela = pygame.display.set_mode((altura, largura))
 pygame.display.set_caption('Space Invaders')
+listared = []
+listagreen = []
+listayellow = []
+
 
 def update():
     pygame.display.flip()
@@ -25,12 +29,7 @@ class Player():
     prox = posx+22
 
     def atirar():
-        proy = Player.proy
-        prox = Player.prox
-        tela.blit(Images.bullet, (prox,proy))
-        for i in range(420):
-            Images.bullet_center.x +=2
-        update()
+        pass
 
 class Images():
     red_image = pygame.image.load('assets/red.png')
@@ -39,7 +38,6 @@ class Images():
     bg = pygame.image.load('assets/space.jpg')
     
     bullet = pygame.image.load('assets/pixil-frame-0.png')
-    bullet_center = bullet.get_rect()
     bullet = pygame.transform.scale(bullet, (15,25))
 
 def draw(tela):
@@ -52,6 +50,8 @@ def draw(tela):
     while vezes < 3:
         for x in range(10, 800, 60):
             tela.blit(Images.red_image, (x, y))
+            listared.append(x)
+            listared.append(y)
             red_center = Images.red_image.get_rect(center=(x,y))
         y+=30
         vezes+=1
@@ -62,6 +62,8 @@ def draw(tela):
     while vezes < 3:
         for x in range(10, 800, 60):
             tela.blit(Images.green_image, (x, y))
+            listagreen.append(x)
+            listagreen.append(y)
             green_center = Images.green_image.get_rect(center=(x,y))
         y+=30
         vezes+=1
@@ -70,6 +72,8 @@ def draw(tela):
 
     for x in range(10, 800, 60):
         tela.blit(Images.yellow_image, (x, y))
+        listayellow.append(x)
+        listayellow.append(y)
         yellow_center = Images.yellow_image.get_rect(center=(x,y))
 
     update()
@@ -92,7 +96,12 @@ def main():
             if Player.posx <= 775:
                 Player.posx += 3
         if pygame.key.get_pressed()[K_h]:
-            Player.atirar()
+            for i in range(2000):
+                proy = Player.proy
+                prox = Player.prox
+                tela.blit(Images.bullet, (prox,proy))
+                update()
+                proy-=1
         
         draw(tela)
             
